@@ -1,10 +1,12 @@
 # ==========================================
 # MODULE: plant_module.yaml
-# Schablone für Insane Plant v1
+# Schablone für Insane Plant 
 # ==========================================
-# Globale Variable als Stundenzähler für diese spezifische Pflanze
 globals:
   - id: p${var_num}_timer_h
+    type: int
+    initial_value: '0'
+  - id: p${var_num}_last_watered_h
     type: int
     initial_value: '0'
 
@@ -20,7 +22,6 @@ sensor:
     accuracy_decimals: 0
     icon: mdi:water-percent
     filters:
-      # Ignoriert einzelne falsche Messwerte, nimmt den mittleren Wert aus 5 Messungen
       - median:
           window_size: 5
           send_every: 5
@@ -29,6 +30,25 @@ sensor:
           - 3.0 -> 0.0
           - 1.5 -> 100.0
       - lambda: return clamp(x, 0.0f, 100.0f);
+
+  - platform: template
+    name: "P${var_num} Nächste Prüfung in"
+    id: p${var_num}_next_check
+    unit_of_measurement: "h"
+    icon: mdi:clock-fast
+    update_interval: 60s
+    lambda: |-
+      return id(p${var_num}_interval).state - id(p${var_num}_timer_h);
+
+  - platform: template
+    name: "P${var_num} Letzte Gießung vor"
+    id: p${var_num}_last_watered_sensor
+    unit_of_measurement: "h"
+    icon: mdi:history
+    update_interval: 60s
+    lambda: |-
+      return id(p${var_num}_last_watered_h);
+
 switch:
   - platform: gpio
     name: "P${var_num} Pumpe Manuell"
@@ -38,7 +58,6 @@ switch:
       sn74hc595: pumpen_hub
       number: ${sr_pin}
     restore_mode: ALWAYS_OFF
-    # FALLBACK: Pumpe schaltet nach spätestens 60s hart ab, egal was passiert
     on_turn_on:
       - delay: 60s
       - switch.turn_off: pump_p${var_num}
@@ -54,10 +73,9 @@ number:
     restore_value: true
     entity_category: config
     icon: mdi:water
-    mode: box  # <--- Macht aus dem Slider ein sauberes Textfeld
+    mode: box
 
   - platform: template
-    # DER FIX: Schrägstrich entfernt
     name: "P${var_num} Kalibrierung (ml pro 10s)"
     id: p${var_num}_calib
     min_value: 1
@@ -79,7 +97,7 @@ number:
     restore_value: true
     entity_category: config
     icon: mdi:gauge
-    mode: box  # <--- Macht aus dem Slider ein sauberes Textfeld
+    mode: box
 
   - platform: template
     name: "P${var_num} Prüf-Intervall (h)"
@@ -91,7 +109,7 @@ number:
     restore_value: true
     entity_category: config
     icon: mdi:clock-check-outline
-    mode: box  # <--- Macht aus dem Slider ein sauberes Textfeld
+    mode: box
 
 button:
   - platform: template
@@ -116,6 +134,7 @@ script:
           condition:
             lambda: 'return id(p${var_num}_calib).state > 0 && id(p${var_num}_amount).state > 0;'
           then:
+            - lambda: 'id(p${var_num}_last_watered_h) = 0;'
             - switch.turn_on: pump_p${var_num}
             - delay: !lambda |-
                 return (id(p${var_num}_amount).state / id(p${var_num}_calib).state) * 10.0 * 1000.0;
@@ -124,11 +143,13 @@ script:
 interval:
   - interval: 1h
     then:
-      # Jede Pflanze wartet ihren Index * 20 Sekunden, bevor sie prüft/gießt.
-      # P1 startet bei Sekunde 20, P2 bei 40, P10 bei 200...
       - delay: !lambda "return ${var_num} * 20000;"
       - lambda: |-
           id(p${var_num}_timer_h) += 1;
+          
+          // NEU: Zählt die Stunden seit der letzten echten Gießung hoch
+          id(p${var_num}_last_watered_h) += 1; 
+          
           if (id(p${var_num}_timer_h) >= id(p${var_num}_interval).state) {
             id(p${var_num}_timer_h) = 0;
             
