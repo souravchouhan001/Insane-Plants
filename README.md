@@ -26,7 +26,7 @@ Der Wemos D1 Mini übernimmt die Sensor-Auswertung, die Ansteuerung der Schieber
 1. Binde den ESP8266 in dein **ESPHome** Dashboard ein.
 2. Kopiere die Hauptdatei `insane-plant.yaml` sowie die Modul-Schablone `plant_module.yaml` in deinen ESPHome-Konfigurationsordner.
 3. Passe deine Zugangsdaten in deiner `secrets.yaml` an. Das Projekt benötigt folgende Parameter: `api_encryption_key`, `ota_password`, `wifi_ssid`, `wifi_password` und `ap_password`.
-4. Flashe das Board. Das System generiert nun automatisch alle Steuerelemente (Gießmenge, Intervall, Trocken-Schwelle, Kalibrierung) für alle 10 Pflanzen übersichtlich in Home Assistant!
+4. Flashe das Board. Das System generiert nun automatisch alle Steuerelemente (Gießmenge, Intervall, Trocken-Schwelle, Kalibrierung) sowie smarte Status-Sensoren (Zeit seit letzter Gießung & Countdown zur nächsten Prüfung) für alle 10 Pflanzen übersichtlich in Home Assistant!
 
 ---
 
